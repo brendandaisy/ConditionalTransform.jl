@@ -1,0 +1,7 @@
+name = "SampleTransform"
+uuid = "273a622a-0ef2-4f07-8304-6a26c740143a"
+authors = ["brendandaisy <bcase@uvm.edu>"]
+version = "0.1.0"
+
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
