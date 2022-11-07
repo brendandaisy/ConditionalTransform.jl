@@ -1,1 +1,1 @@
-# SampleTransform.jl
+# ConditionalTransform.jl

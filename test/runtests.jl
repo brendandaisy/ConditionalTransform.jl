@@ -1,7 +1,7 @@
 using Test
 using Revise
 using Distributions
-using SampleTransform
+using ConditionalTransform
 
 X = Normal(0, 1)
 Y = Normal(0, 1)

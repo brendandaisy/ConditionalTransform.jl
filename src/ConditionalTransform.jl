@@ -1,13 +1,12 @@
-module SampleTransform
+module ConditionalTransform
+
+#TODO: how about...PDFTransform? ProbabilityTransform?
 
 using Distributions
 
 export ARSampler, accept_reject, sample_cond_f
 
 struct ARSampler
-    # f::Function
-    # f_inv::Function
-    # ∂f_inv::Function
     target::Function
     proposal::Distribution
 end
@@ -51,4 +50,4 @@ function sample_cond_f(dists::NamedTuple, u, f_inv, d_f_inv; pivot=1, kwargs...)
     sample_cond_f(values(dists), u, f_inv, d_f_inv; pivot, kwargs...)
 end
 
-end # module SampleTransform
+end # module
