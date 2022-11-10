@@ -33,21 +33,30 @@ function accept_reject(ar::ARSampler; acc_rate=100, nsamples=100)
     return [getindex.(ret, i) for i=1:length(ar.proposal)]
 end
 
-function sample_cond_f(dists::AbstractVector, u, f_inv, d_f_inv; pivot=1, acc_rate=100, nsamples=100)
+"""
+Assumes the order of parameters in `dists`, `f_inv`, and `d_f_inv` are the same
+"""
+function sample_cond_f(dists::AbstractVector, u, f_inv, d_f_inv; pivot=1, acc_rate=100, nsamples=100, cond=nothing)
     dpivot = dists[pivot]
     deleteat!(dists, pivot)
-    target = x -> prod(pdf.(dists, x)) * abs(d_f_inv(x..., u)) * pdf(dpivot, f_inv(x..., u))
-    ar = ARSampler(target, dists...)
+
+    target_pdf = x -> begin
+        cond !== nothing && cond(x..., u) && return 0
+        J = abs(d_f_inv(x..., u))
+        prod(pdf.(dists, x)) * J * pdf(dpivot, f_inv(x..., u))
+    end
+
+    ar = ARSampler(target_pdf, dists...)
     samps = accept_reject(ar; acc_rate, nsamples)
     pivot_samps = f_inv.(samps..., u)
-    return push!(samps, pivot_samps)
+    return insert!(samps, pivot, pivot_samps)
 end
 
 function sample_cond_f(dists::NamedTuple, u, f_inv, d_f_inv; pivot=1, kwargs...)
     if pivot isa Symbol
-        pivot = getindex(dists, pivot)
+        pivot_idx = findall(x->x==pivot, keys(dists))[1]
     end
-    sample_cond_f(values(dists), u, f_inv, d_f_inv; pivot, kwargs...)
+    sample_cond_f(vcat(dists...), u, f_inv, d_f_inv; pivot=pivot_idx, kwargs...)
 end
 
 end # module
