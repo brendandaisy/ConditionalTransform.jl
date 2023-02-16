@@ -4,3 +4,5 @@ A helper package written in Julia to sample from various conditional distributio
 
 * If $u$ is a scalar, sample $x \sim P(X)$ such that $f(x) = u$. Use function `sample_cond_f`
 * If $u$ is a boolean, sample $x \sim P(X)$ such that $f(x)$ returns `false`. Use function `sample_trunc_f`
+
+See the test folder for example usage. In that simple example, $X=(U, V)$ where $U, V$ are independent standard normal, and $f(U, V) = U - V$.
